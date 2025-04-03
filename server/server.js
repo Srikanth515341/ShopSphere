@@ -4,7 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const pool = require('./config/db');
 const productRoutes = require('./routes/productRoutes');
-
+const orderRoutes = require('./routes/orderRoutes');
 
 dotenv.config();
 
@@ -16,7 +16,7 @@ app.use(express.json());
 app.use('/api/products', productRoutes);
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
-
+app.use('/api/orders', orderRoutes);
 app.get('/', (req, res) => {
   res.send('ShopSphere backend is running ✅');
 });
