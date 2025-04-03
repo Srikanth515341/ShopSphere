@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getAllProducts } from '../services/productService';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -23,9 +24,11 @@ const Home = () => {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
         {products.map((product) => (
           <div key={product.id} style={{ border: '1px solid #ccc', padding: '1rem', width: '200px' }}>
-            <img src={product.image} alt={product.name} style={{ width: '100%', height: '150px', objectFit: 'cover' }} />
-            <h3>{product.name}</h3>
-            <p>${product.price}</p>
+            <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'black' }}>
+              <img src={product.image} alt={product.name} style={{ width: '100%', height: '150px', objectFit: 'cover' }} />
+              <h3>{product.name}</h3>
+              <p>${product.price}</p>
+            </Link>
           </div>
         ))}
       </div>
