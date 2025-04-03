@@ -4,6 +4,8 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
+import AddProduct from './pages/AddProduct';
+
 
 function App() {
   return (
@@ -13,6 +15,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/admin/add-product" element={<AddProduct />} />
       </Routes>
     </Router>
   );
