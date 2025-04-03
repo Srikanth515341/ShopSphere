@@ -9,4 +9,9 @@ const addProduct = async (name, description, price, image) => {
   return result.rows[0];
 };
 
-module.exports = { addProduct };
+const getAllProducts = async () => {
+  const result = await pool.query('SELECT * FROM products ORDER BY created_at DESC');
+  return result.rows;
+};
+
+module.exports = { addProduct, getAllProducts };

@@ -1,5 +1,5 @@
 // server/controllers/productController.js
-const { addProduct } = require('../models/productModel');
+const { addProduct, getAllProducts } = require('../models/productModel');
 
 const createProduct = async (req, res) => {
   try {
@@ -11,4 +11,13 @@ const createProduct = async (req, res) => {
   }
 };
 
-module.exports = { createProduct };
+const fetchProducts = async (req, res) => {
+  try {
+    const products = await getAllProducts();
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+module.exports = { createProduct, fetchProducts };
