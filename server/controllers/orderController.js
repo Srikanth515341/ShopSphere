@@ -1,11 +1,10 @@
 // server/controllers/orderController.js
-const { placeOrder } = require('../models/orderModel');
+const { placeOrder, getAllOrders } = require('../models/orderModel');
 
 const createOrder = async (req, res) => {
   try {
     const { items, total } = req.body;
-
-    console.log('ORDER RECEIVED:', items, total); // ✅ log the incoming data
+    console.log('ORDER RECEIVED:', items, total);
 
     if (!items || items.length === 0) {
       return res.status(400).json({ message: 'Cart is empty' });
@@ -14,9 +13,18 @@ const createOrder = async (req, res) => {
     const order = await placeOrder(items, total);
     res.status(201).json({ message: 'Order placed successfully', order });
   } catch (err) {
-    console.error('Order Error:', err); // ✅ log the actual error
+    console.error('Order Error:', err);
     res.status(500).json({ error: err.message });
   }
 };
 
-module.exports = { createOrder };
+const fetchOrders = async (req, res) => {
+  try {
+    const orders = await getAllOrders();
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+module.exports = { createOrder, fetchOrders };

@@ -7,6 +7,8 @@ import Navbar from './components/Navbar';
 import AddProduct from './pages/AddProduct';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
+import AdminOrders from './pages/AdminOrders';
+
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/admin/add-product" element={<AddProduct />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/admin/orders" element={<AdminOrders />} />
+
       </Routes>
     </Router>
   );
