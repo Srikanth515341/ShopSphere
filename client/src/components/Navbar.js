@@ -1,25 +1,39 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import styles from '../styles/Navbar.module.css';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const isLoggedIn = localStorage.getItem('token');
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     navigate('/login');
   };
 
-  return (
-    <nav style={{ padding: '1rem', backgroundColor: '#eee' }}>
-      <Link to="/" style={{ marginRight: '1rem' }}>Home</Link>
-      <Link to="/cart" style={{ marginRight: '1rem' }}>Cart</Link>
-      <Link to="/admin/orders" style={{ marginRight: '1rem' }}>Admin</Link>
-      <Link to="/admin/products" style={{ marginRight: '1rem' }}>Manage Products</Link>
+  const user = JSON.parse(localStorage.getItem('user'));
 
-      {!isLoggedIn && <Link to="/register" style={{ marginRight: '1rem' }}>Register</Link>}
-      {!isLoggedIn && <Link to="/login" style={{ marginRight: '1rem' }}>Login</Link>}
-      {isLoggedIn && <button onClick={handleLogout}>Logout</button>}
+  return (
+    <nav className={styles.navbar}>
+      <div className={styles.navLinks}>
+        <Link to="/">Home</Link>
+        <Link to="/cart">Cart</Link>
+        {user?.username === 'admin' && (
+          <>
+            <Link to="/admin">Admin</Link>
+            <Link to="/admin/products">Manage Products</Link>
+          </>
+        )}
+        {!user ? (
+          <>
+            <Link to="/register">Register</Link>
+            <Link to="/login">Login</Link>
+          </>
+        ) : (
+          <button onClick={handleLogout} className={styles.logoutBtn}>
+            Logout
+          </button>
+        )}
+      </div>
     </nav>
   );
 };
