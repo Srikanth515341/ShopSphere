@@ -15,6 +15,8 @@ const Navbar = () => {
       <Link to="/" style={{ marginRight: '1rem' }}>Home</Link>
       <Link to="/cart" style={{ marginRight: '1rem' }}>Cart</Link>
       <Link to="/admin/orders" style={{ marginRight: '1rem' }}>Admin</Link>
+      <Link to="/admin/products" style={{ marginRight: '1rem' }}>Manage Products</Link>
+
       {!isLoggedIn && <Link to="/register" style={{ marginRight: '1rem' }}>Register</Link>}
       {!isLoggedIn && <Link to="/login" style={{ marginRight: '1rem' }}>Login</Link>}
       {isLoggedIn && <button onClick={handleLogout}>Logout</button>}
