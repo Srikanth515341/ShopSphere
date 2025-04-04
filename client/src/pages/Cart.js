@@ -1,60 +1,77 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import styles from '../styles/Cart.module.css';
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const [cart, setCart] = useState([]);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-    setCartItems(storedCart);
+    setCart(storedCart);
   }, []);
 
-  const handleRemove = (id) => {
-    const updatedCart = cartItems.filter((item) => item.id !== id);
-    setCartItems(updatedCart);
+  const removeFromCart = (id) => {
+    const updatedCart = cart.filter(item => item.id !== id);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
+    setCart(updatedCart);
   };
 
   const getTotal = () => {
-    return cartItems.reduce((total, item) => total + parseFloat(item.price), 0).toFixed(2);
+    return cart.reduce((acc, item) => acc + parseFloat(item.price), 0).toFixed(2);
   };
 
   const placeOrder = async () => {
     try {
-      const res = await axios.post('http://localhost:5000/api/orders', {
-        items: cartItems,
-        total: getTotal()
+      const res = await fetch('http://localhost:5000/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: cart,
+          total: getTotal(),
+        }),
       });
-      setMessage('Order placed successfully!');
-      localStorage.removeItem('cart');
-      setCartItems([]);
+
+      if (res.ok) {
+        localStorage.removeItem('cart');
+        setCart([]);
+        setMessage('Order placed successfully!');
+      } else {
+        setMessage('Failed to place order');
+      }
     } catch (err) {
-      setMessage('Failed to place order');
       console.error(err);
+      setMessage('Error placing order');
     }
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div className={styles.cartContainer}>
       <h2>Your Cart</h2>
-      {cartItems.length === 0 ? (
+
+      {cart.length === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
         <div>
-          {cartItems.map((item) => (
-            <div key={item.id} style={{ borderBottom: '1px solid #ccc', padding: '1rem 0' }}>
-              <h3>{item.name}</h3>
-              <img src={item.image} alt={item.name} style={{ width: '150px' }} />
-              <p>${item.price}</p>
-              <button onClick={() => handleRemove(item.id)}>Remove</button>
+          {cart.map(item => (
+            <div key={item.id} className={styles.cartItem}>
+              <img src={item.image} alt={item.name} className={styles.image} />
+              <div>
+                <h4>{item.name}</h4>
+                <p>${item.price}</p>
+                <button onClick={() => removeFromCart(item.id)} className={styles.removeBtn}>Remove</button>
+              </div>
             </div>
           ))}
-          <h3>Total: ${getTotal()}</h3>
-          <button onClick={placeOrder}>Place Order</button>
+
+          <div className={styles.total}>
+            <strong>Total:</strong> ${getTotal()}
+          </div>
+
+          <button onClick={placeOrder} className={styles.placeOrderBtn}>Place Order</button>
         </div>
       )}
-      <p>{message}</p>
+
+      {message && <p className={styles.message}>{message}</p>}
     </div>
   );
 };
