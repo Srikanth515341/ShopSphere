@@ -1,0 +1,34 @@
+.adminOrdersContainer {
+    padding: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .orderCard {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .orderCard h3 {
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+  }
+  
+  .orderCard p {
+    margin: 0.3rem 0;
+  }
+  
+  .itemsList {
+    margin-top: 1rem;
+    padding-left: 1.2rem;
+  }
+  
+  .item {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+  
