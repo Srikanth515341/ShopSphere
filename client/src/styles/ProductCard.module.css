@@ -1,32 +1,31 @@
-/* ProductCard.module.css */
 .card {
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
+    padding: 20px;
     border-radius: 12px;
-    padding: 1rem;
-    transition: box-shadow 0.3s ease;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 300px;
+    cursor: pointer;
+    transition: 0.3s;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
   
   .card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transform: scale(1.02);
   }
   
   .image {
     width: 100%;
-    height: 180px;
-    object-fit: cover;
+    height: auto;
     border-radius: 8px;
   }
   
-  .title {
-    font-size: 1.1rem;
-    margin: 0.5rem 0 0.3rem;
-    color: #333;
+  .name {
+    font-weight: 600;
+    margin: 10px 0 4px;
   }
   
   .price {
+    color: #e63946;
     font-weight: bold;
-    color: #e74c3c;
   }
   

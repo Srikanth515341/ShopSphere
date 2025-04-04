@@ -1,24 +1,23 @@
-/* Home.module.css */
-.homeContainer {
-    padding: 2rem;
+.container {
     text-align: center;
+    padding: 40px 20px;
   }
   
   .heading {
     font-size: 2rem;
-    margin-bottom: 0.5rem;
-    color: #2c3e50;
+    font-weight: bold;
+    margin-bottom: 10px;
   }
   
-  .subHeading {
-    font-size: 1rem;
-    color: #555;
-    margin-bottom: 2rem;
+  .subheading {
+    color: #444;
+    margin-bottom: 30px;
   }
   
   .productGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
   }
   
