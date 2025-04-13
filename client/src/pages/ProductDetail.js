@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from '../styles/ProductDetail.module.css';
 import { products } from '../data/productsData';
+import { useCart } from '../context/CartContext';
 
 const normalize = (str) =>
-  str.replace(/\s|[^a-zA-Z0-9]/g, '').toLowerCase(); // removes space and special characters
+  str.replace(/\s|[^a-zA-Z0-9]/g, '').toLowerCase(); // removes spaces & special characters
 
 const ProductDetail = () => {
   const { category, productName } = useParams();
@@ -16,6 +17,7 @@ const ProductDetail = () => {
   );
 
   const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
 
   if (!product) {
     return <div className={styles.error}>Product not found.</div>;
@@ -23,6 +25,11 @@ const ProductDetail = () => {
 
   const handleIncrement = () => setQuantity(quantity + 1);
   const handleDecrement = () => quantity > 1 && setQuantity(quantity - 1);
+
+  const handleAddToCart = () => {
+    addToCart({ ...product, quantity });
+    alert(`${product.name} added to cart`);
+  };
 
   return (
     <div className={styles.container}>
@@ -33,7 +40,9 @@ const ProductDetail = () => {
       <div className={styles.detailsSection}>
         <h2>{product.name}</h2>
         <div className={styles.rating}>⭐⭐⭐⭐☆ (4)</div>
-        <p className={styles.original}>MRP: <s>${product.originalPrice}</s></p>
+        <p className={styles.original}>
+          MRP: <s>${product.originalPrice}</s>
+        </p>
         <p className={styles.discount}>MRP: ${product.discountPrice}</p>
         <p className={styles.taxNote}>(inclusive of all taxes)</p>
 
@@ -53,7 +62,9 @@ const ProductDetail = () => {
         </div>
 
         <div className={styles.btnRow}>
-          <button className={styles.cart}>Add to Cart</button>
+          <button className={styles.cart} onClick={handleAddToCart}>
+            Add to Cart
+          </button>
           <button className={styles.buy}>Buy now</button>
         </div>
       </div>

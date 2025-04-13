@@ -1,21 +1,32 @@
 import React from 'react';
 import styles from '../styles/Navbar.module.css';
 import { FaShoppingCart } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
+  const { cartItems } = useCart();
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.logo}>
-        <span className={styles.green}>🛒</span> ShopSphere
+        <Link to="/" className={styles.logoLink}>
+          <span className={styles.green}>🛒</span> ShopSphere
+        </Link>
       </div>
+
       <ul className={styles.navLinks}>
-        <li>Seller Dashboard</li>
-        <li>Home</li>
-        <li>All Products</li>
+        <li><Link to="/categories">All Products</Link></li>
+        <li><Link to="/seller">Seller Dashboard</Link></li>
       </ul>
+
       <div className={styles.actions}>
         <input type="text" placeholder="Search products" />
-        <FaShoppingCart className={styles.cartIcon} />
+        <Link to="/cart" className={styles.cartWrapper}>
+          <FaShoppingCart className={styles.cartIcon} />
+          {totalItems > 0 && <span className={styles.cartCount}>{totalItems}</span>}
+        </Link>
         <button className={styles.login}>Login</button>
       </div>
     </nav>

@@ -1,61 +1,78 @@
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: white;
-    border-bottom: 1px solid #e0e0e0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  
-  .logo {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #2ecc71;
-  }
-  
-  .green {
-    margin-right: 5px;
-  }
-  
-  .navLinks {
-    list-style: none;
-    display: flex;
-    gap: 1.5rem;
-    font-weight: 500;
-  }
-  
-  .navLinks li {
-    cursor: pointer;
-  }
-  
-  .actions {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .actions input {
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    outline: none;
-  }
-  
-  .cartIcon {
-    font-size: 1.3rem;
-    cursor: pointer;
-  }
-  
-  .login {
-    padding: 6px 14px;
-    background-color: #2ecc71;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #2ecc71;
+}
+
+.green {
+  margin-right: 5px;
+}
+
+.navLinks {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  font-weight: 500;
+}
+
+.navLinks li {
+  cursor: pointer;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.actions input {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+}
+
+.cartWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.cartIcon {
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: #6c2bd9;
+}
+
+.cartCount {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+.login {
+  padding: 6px 14px;
+  background-color: #2ecc71;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
