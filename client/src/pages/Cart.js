@@ -1,9 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import styles from '../styles/Cart.module.css';
 
 const Cart = () => {
   const { cartItems, removeFromCart, clearCart } = useCart();
+  const navigate = useNavigate();
 
   const getTotal = () => {
     return cartItems.reduce((acc, item) => acc + item.discountPrice * item.quantity, 0);
@@ -31,7 +33,12 @@ const Cart = () => {
       <div className={styles.summary}>
         <h3>Total Amount: ${getTotal()}</h3>
         <button className={styles.clear} onClick={clearCart}>Clear Cart</button>
-        <button className={styles.checkout}>Proceed to Checkout</button>
+        <button
+          className={styles.checkout}
+          onClick={() => navigate('/checkout')}
+        >
+          Proceed to Checkout
+        </button>
       </div>
     </div>
   );
