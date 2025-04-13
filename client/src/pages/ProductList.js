@@ -1,19 +1,31 @@
 import React from 'react';
 import styles from '../styles/ProductList.module.css';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { products } from '../data/productsData';
 
 const ProductList = () => {
   const { category } = useParams();
+  const navigate = useNavigate();
+
   const categoryKey = category.replace(/\s|&/g, '').toLowerCase();
   const filteredProducts = products[categoryKey] || [];
+
+  const handleProductClick = (productName) => {
+    const productKey = productName.replace(/\s/g, '');
+    navigate(`/products/${category}/${productKey}`);
+  };
 
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>{category.toUpperCase()}</h2>
       <div className={styles.grid}>
         {filteredProducts.map((product, index) => (
-          <div key={index} className={styles.card}>
+          <div
+            key={index}
+            className={styles.card}
+            onClick={() => handleProductClick(product.name)}
+            style={{ cursor: 'pointer' }}
+          >
             <img
               src={require(`../assets/${product.image}`)}
               alt={product.name}
