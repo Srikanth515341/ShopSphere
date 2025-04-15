@@ -1,12 +1,24 @@
 import React from 'react';
 import styles from '../styles/Navbar.module.css';
 import { FaShoppingCart } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const { cartItems } = useCart();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  const handleLogout = () => {
+    const confirmLogout = window.confirm('Are you sure you want to logout?');
+    if (confirmLogout) {
+      logout();
+      navigate('/');
+    }
+  };
 
   return (
     <nav className={styles.navbar}>
@@ -27,7 +39,16 @@ const Navbar = () => {
           <FaShoppingCart className={styles.cartIcon} />
           {totalItems > 0 && <span className={styles.cartCount}>{totalItems}</span>}
         </Link>
-        <button className={styles.login}>Login</button>
+        {user ? (
+          <>
+            <span className={styles.userName}>{user.name}</span>
+            <button className={styles.login} onClick={handleLogout}>Logout</button>
+          </>
+        ) : (
+          <Link to="/login">
+            <button className={styles.login}>Login</button>
+          </Link>
+        )}
       </div>
     </nav>
   );
