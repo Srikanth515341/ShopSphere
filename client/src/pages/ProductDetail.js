@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from '../styles/ProductDetail.module.css';
-import { products } from '../data/productsData';
+import { fetchProductByName } from '../services/api';
 import { useCart } from '../context/CartContext';
 
-const normalize = (str) =>
-  str.replace(/\s|[^a-zA-Z0-9]/g, '').toLowerCase(); // removes spaces & special characters
-
 const ProductDetail = () => {
-  const { category, productName } = useParams();
-  const categoryKey = normalize(category);
-  const productList = products[categoryKey] || [];
-
-  const product = productList.find(
-    (item) => normalize(item.name) === normalize(productName)
-  );
-
+  const { productName } = useParams();
+  const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
+
+  useEffect(() => {
+    const loadProduct = async () => {
+      const data = await fetchProductByName(productName);
+      setProduct(data);
+    };
+
+    loadProduct();
+  }, [productName]);
 
   if (!product) {
     return <div className={styles.error}>Product not found.</div>;
@@ -41,9 +41,9 @@ const ProductDetail = () => {
         <h2>{product.name}</h2>
         <div className={styles.rating}>⭐⭐⭐⭐☆ (4)</div>
         <p className={styles.original}>
-          MRP: <s>${product.originalPrice}</s>
+          MRP: <s>${product.price + 10}</s>
         </p>
-        <p className={styles.discount}>MRP: ${product.discountPrice}</p>
+        <p className={styles.discount}>MRP: ${product.price}</p>
         <p className={styles.taxNote}>(inclusive of all taxes)</p>
 
         <div className={styles.about}>
