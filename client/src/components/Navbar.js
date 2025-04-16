@@ -10,7 +10,10 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  // ✅ Safe fallback if cartItems is not an array
+  const totalItems = Array.isArray(cartItems)
+    ? cartItems.reduce((sum, item) => sum + item.quantity, 0)
+    : 0;
 
   const handleLogout = () => {
     const confirmLogout = window.confirm('Are you sure you want to logout?');

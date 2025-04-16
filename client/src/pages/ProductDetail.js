@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import styles from '../styles/ProductDetail.module.css';
 import { fetchProductByName } from '../services/api';
 import { useCart } from '../context/CartContext';
+import { addToCartAPI } from '../services/cartService';
 
 const ProductDetail = () => {
   const { productName } = useParams();
@@ -15,21 +16,36 @@ const ProductDetail = () => {
       const data = await fetchProductByName(productName);
       setProduct(data);
     };
-
     loadProduct();
   }, [productName]);
+
+  const handleIncrement = () => setQuantity(prev => prev + 1);
+  const handleDecrement = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
+
+  const handleAddToCart = async () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user?.id) return alert('Please login to add items to cart');
+    if (!product?.id) return alert('Product ID is missing.');
+
+    try {
+      addToCart({ ...product, quantity }); // frontend update
+
+      await addToCartAPI({
+        userId: user.id,
+        productId: product.id,
+        quantity,
+      }); // backend update
+
+      alert(`${product.name} added to cart`);
+    } catch (error) {
+      console.error('❌ Failed to add to cart:', error);
+      alert('Something went wrong. Please try again.');
+    }
+  };
 
   if (!product) {
     return <div className={styles.error}>Product not found.</div>;
   }
-
-  const handleIncrement = () => setQuantity(quantity + 1);
-  const handleDecrement = () => quantity > 1 && setQuantity(quantity - 1);
-
-  const handleAddToCart = () => {
-    addToCart({ ...product, quantity });
-    alert(`${product.name} added to cart`);
-  };
 
   return (
     <div className={styles.container}>
@@ -40,9 +56,7 @@ const ProductDetail = () => {
       <div className={styles.detailsSection}>
         <h2>{product.name}</h2>
         <div className={styles.rating}>⭐⭐⭐⭐☆ (4)</div>
-        <p className={styles.original}>
-          MRP: <s>${product.price + 10}</s>
-        </p>
+        <p className={styles.original}>MRP: <s>${product.price + 10}</s></p>
         <p className={styles.discount}>MRP: ${product.price}</p>
         <p className={styles.taxNote}>(inclusive of all taxes)</p>
 
@@ -62,9 +76,7 @@ const ProductDetail = () => {
         </div>
 
         <div className={styles.btnRow}>
-          <button className={styles.cart} onClick={handleAddToCart}>
-            Add to Cart
-          </button>
+          <button className={styles.cart} onClick={handleAddToCart}>Add to Cart</button>
           <button className={styles.buy}>Buy now</button>
         </div>
       </div>

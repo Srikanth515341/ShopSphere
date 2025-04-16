@@ -1,3 +1,4 @@
+// client/src/context/AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
@@ -15,11 +16,20 @@ export const AuthProvider = ({ children }) => {
   const login = ({ email, password }) => {
     const registered = JSON.parse(localStorage.getItem('registeredUser'));
 
-    if (registered && registered.email === email && registered.password === password) {
-      const loggedInUser = { name: registered.name, email: registered.email };
+    if (
+      registered &&
+      registered.email === email &&
+      registered.password === password
+    ) {
+      const loggedInUser = {
+        id: registered.id, // ✅ make sure this includes id
+        name: registered.name,
+        email: registered.email,
+      };
+
       setUser(loggedInUser);
       localStorage.setItem('user', JSON.stringify(loggedInUser));
-      return true;
+      return loggedInUser; // ✅ return user object with id
     } else {
       return false;
     }

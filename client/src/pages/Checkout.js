@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from '../styles/Checkout.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { clearCartAPI } from '../services/cartService';
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -18,11 +19,19 @@ const Checkout = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.name && form.mobile && form.email && form.address) {
+
+    const { name, mobile, email, address } = form;
+    if (name && mobile && email && address) {
+      const user = JSON.parse(localStorage.getItem('user'));
+
+      if (user?.id) {
+        await clearCartAPI(user.id); // ✅ Clear backend cart
+      }
+
+      clearCart(); // ✅ Clear frontend cart
       alert('✅ Order placed successfully!');
-      clearCart(); // ✅ Clear cart after successful order
       navigate('/');
     } else {
       alert('❌ Please fill in all fields!');
@@ -63,9 +72,10 @@ const Checkout = () => {
           value={form.address}
           onChange={handleChange}
           required
-        ></textarea>
-
-        <button type="submit" className={styles.placeOrder}>Place Order</button>
+        />
+        <button type="submit" className={styles.placeOrder}>
+          Place Order
+        </button>
       </form>
     </div>
   );

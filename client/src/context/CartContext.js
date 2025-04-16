@@ -1,29 +1,65 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import {
+  getCartItemsAPI,
+  addToCartAPI,
+  removeCartItemAPI,
+  clearCartAPI,
+} from '../services/cartService';
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
+  const [userId, setUserId] = useState(null);
 
-  const addToCart = (product, quantity = 1) => {
-    const existingItem = cartItems.find(item => item.name === product.name);
-    if (existingItem) {
-      setCartItems(prev =>
-        prev.map(item =>
-          item.name === product.name ? { ...item, quantity: item.quantity + quantity } : item
-        )
-      );
-    } else {
-      setCartItems(prev => [...prev, { ...product, quantity }]);
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user?.id) {
+      setUserId(user.id);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (userId) {
+      loadCart();
+    }
+  }, [userId]);
+
+  const loadCart = async () => {
+    try {
+      const items = await getCartItemsAPI(userId);
+      setCartItems(Array.isArray(items) ? items : []);
+    } catch (error) {
+      console.error('Cart fetch failed', error);
+      setCartItems([]);
     }
   };
 
-  const removeFromCart = (productName) => {
-    setCartItems(prev => prev.filter(item => item.name !== productName));
+  const addToCart = async (product, quantity = 1) => {
+    try {
+      const added = await addToCartAPI({ userId, productId: product.id, quantity });
+      if (added) await loadCart();
+    } catch (error) {
+      console.error('Add to cart failed', error);
+    }
   };
 
-  const clearCart = () => {
-    setCartItems([]);
+  const removeFromCart = async (itemId) => {
+    try {
+      const removed = await removeCartItemAPI(itemId);
+      if (removed) await loadCart();
+    } catch (error) {
+      console.error('Remove from cart failed', error);
+    }
+  };
+
+  const clearCart = async () => {
+    try {
+      const cleared = await clearCartAPI(userId);
+      if (cleared) setCartItems([]);
+    } catch (error) {
+      console.error('Clear cart failed', error);
+    }
   };
 
   return (

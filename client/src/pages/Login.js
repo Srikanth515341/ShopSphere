@@ -15,7 +15,8 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const success = login(form);
-    if (success) {
+    if (success && success.id) {
+      localStorage.setItem('user', JSON.stringify(success)); // ✅ Save user with ID
       alert('✅ Login successful!');
       navigate('/');
     } else {
@@ -33,6 +34,7 @@ const Login = () => {
           placeholder="Email"
           value={form.email}
           onChange={handleChange}
+          required
         />
         <input
           type="password"
@@ -40,6 +42,7 @@ const Login = () => {
           placeholder="Password"
           value={form.password}
           onChange={handleChange}
+          required
         />
         <button type="submit">Login</button>
       </form>
