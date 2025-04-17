@@ -3,11 +3,11 @@ import styles from '../styles/Navbar.module.css';
 import { FaShoppingCart } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { useUser } from '../context/UserContext'; // ✅ Correct import
+import { useUser } from '../context/UserContext';
 
 const Navbar = () => {
   const { cartItems } = useCart();
-  const { user, logoutUser } = useUser(); // ✅ Correct hook and function
+  const { user, logoutUser } = useUser();
   const navigate = useNavigate();
 
   const totalItems = Array.isArray(cartItems)
@@ -17,7 +17,7 @@ const Navbar = () => {
   const handleLogout = () => {
     const confirmLogout = window.confirm('Are you sure you want to logout?');
     if (confirmLogout) {
-      logoutUser(); // ✅ Correct function
+      logoutUser();
       navigate('/');
     }
   };
@@ -33,6 +33,7 @@ const Navbar = () => {
       <ul className={styles.navLinks}>
         <li><Link to="/categories">All Products</Link></li>
         <li><Link to="/seller">Seller Dashboard</Link></li>
+        {user && <li><Link to="/orders">Order History</Link></li>} {/* ✅ New link */}
       </ul>
 
       <div className={styles.actions}>

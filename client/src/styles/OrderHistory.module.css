@@ -1,0 +1,52 @@
+/* client/src/styles/OrderHistory.module.css */
+.container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .heading {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+  
+  .message {
+    text-align: center;
+    color: #777;
+    font-size: 1.2rem;
+  }
+  
+  .orderCard {
+    background-color: #f9f9f9;
+    border-left: 4px solid #4caf50;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  .orderCard h3 {
+    margin: 0 0 0.5rem 0;
+    color: #444;
+  }
+  
+  .orderCard p {
+    margin: 0.2rem 0;
+    color: #555;
+  }
+  
+  .items {
+    margin-top: 1rem;
+    padding-left: 1rem;
+    border-top: 1px solid #ddd;
+    padding-top: 0.5rem;
+  }
+  
+  .item {
+    padding: 0.3rem 0;
+    font-size: 0.95rem;
+    color: #333;
+  }
+  

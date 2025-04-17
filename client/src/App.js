@@ -10,8 +10,10 @@ import Checkout from './pages/Checkout';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import SellerDashboard from './pages/SellerDashboard';
+import OrderHistory from './pages/OrderHistory'; // ✅ New import
+
 import { CartProvider } from './context/CartContext';
-import { UserProvider, useUser } from './context/UserContext'; // ✅ Using UserContext
+import { UserProvider, useUser } from './context/UserContext';
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useUser();
@@ -43,6 +45,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <SellerDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <ProtectedRoute>
+                  <OrderHistory />
                 </ProtectedRoute>
               }
             />

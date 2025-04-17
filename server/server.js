@@ -3,7 +3,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const productRoutes = require('./routes/productRoutes');
 const cartRoutes = require('./routes/cartRoutes');
-const authRoutes = require('./routes/authRoutes'); // ✅ Auth route
+const authRoutes = require('./routes/authRoutes');
+const orderRoutes = require('./routes/orderRoutes'); // ✅ NEW
 
 dotenv.config();
 
@@ -14,7 +15,8 @@ app.use(express.json());
 // ✅ Mount API routes
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
-app.use('/api/auth', authRoutes); // ✅ Add auth route
+app.use('/api/auth', authRoutes);
+app.use('/api/orders', orderRoutes); // ✅ Add order routes
 
 app.listen(5000, () => {
   console.log('✅ Server running on port 5000');

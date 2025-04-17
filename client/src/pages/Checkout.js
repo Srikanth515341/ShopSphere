@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import styles from '../styles/Checkout.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { placeOrder } from '../services/orderService';
 import { clearCartAPI } from '../services/cartService';
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { clearCart } = useCart();
+  const { cartItems, clearCart } = useCart();
 
   const [form, setForm] = useState({
     name: '',
@@ -21,20 +22,33 @@ const Checkout = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const { name, mobile, email, address } = form;
-    if (name && mobile && email && address) {
-      const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('user'));
 
-      if (user?.id) {
-        await clearCartAPI(user.id); // ✅ Clear backend cart
+    if (name && mobile && email && address && cartItems.length > 0 && user?.id) {
+      const total = cartItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+
+      const orderData = {
+        userId: user.id,
+        total,
+        cartItems
+      };
+
+      const result = await placeOrder(orderData);
+
+      if (result?.message === 'Order placed successfully') {
+        await clearCartAPI(user.id); // ✅ clear backend
+        clearCart();                 // ✅ clear frontend
+        alert('✅ Order placed successfully!');
+        navigate('/');
+      } else {
+        alert('❌ Failed to place order. Try again.');
       }
-
-      clearCart(); // ✅ Clear frontend cart
-      alert('✅ Order placed successfully!');
-      navigate('/');
     } else {
-      alert('❌ Please fill in all fields!');
+      alert('❌ Please fill in all fields and ensure your cart is not empty!');
     }
   };
 
