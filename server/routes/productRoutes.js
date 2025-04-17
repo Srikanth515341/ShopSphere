@@ -3,16 +3,20 @@ const router = express.Router();
 const {
   getAllProducts,
   getProductByName,
-  getProductsByCategory
+  getProductsByCategory,
+  getAllCategories, // ✅ Importing category list controller
 } = require('../controllers/productController');
 
-// GET /api/products
+// ✅ Get all products
 router.get('/', getAllProducts);
 
-// GET /api/products/name/:name
+// ✅ Get a product by name
 router.get('/name/:name', getProductByName);
 
-// GET /api/products/category/:category
+// ✅ Get products by category
 router.get('/category/:category', getProductsByCategory);
+
+// ✅ Get all unique categories (used in Categories page)
+router.get('/categories', getAllCategories);
 
 module.exports = router;

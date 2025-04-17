@@ -1,23 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../styles/Categories.module.css';
 import { useNavigate } from 'react-router-dom';
-import {
-  foodCategories,
-  fashionCategories,
-  electronicsCategories,
-} from '../data/productsData';
+import axios from 'axios';
 
 const Categories = () => {
   const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
 
-  const handleClick = (title) => {
-    const formattedTitle = title.replace(/\s|&/g, '').toLowerCase();
+  const handleClick = (category) => {
+    const formattedTitle = category.replace(/\s|&/g, '').toLowerCase();
     navigate(`/products/${formattedTitle}`);
   };
 
-  const renderSection = (title, categories) => (
-    <>
-      <h2 className={styles.sectionTitle}>{title}</h2>
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/products/categories');
+      setCategories(res.data); // Expecting: [{ title, image, bgColor }]
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  return (
+    <div className={styles.container}>
+      <h2 className={styles.sectionTitle}>All Categories</h2>
       <div className={styles.grid}>
         {categories.map((item, index) => (
           <div
@@ -27,7 +37,11 @@ const Categories = () => {
             onClick={() => handleClick(item.title)}
           >
             <img
-              src={require(`../assets/${item.image}`)}
+              src={
+                item.image
+                  ? require(`../assets/${item.image}`)
+                  : require(`../assets/default.png`) // fallback if image is missing
+              }
               alt={item.title}
               className={styles.image}
             />
@@ -35,14 +49,6 @@ const Categories = () => {
           </div>
         ))}
       </div>
-    </>
-  );
-
-  return (
-    <div className={styles.container}>
-      {renderSection('Food Categories', foodCategories)}
-      {renderSection('Fashion Categories', fashionCategories)}
-      {renderSection('Electronics Categories', electronicsCategories)}
     </div>
   );
 };

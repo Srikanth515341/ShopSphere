@@ -1,6 +1,6 @@
 const pool = require('../config/db');
 
-// GET all products
+// ✅ GET all products
 exports.getAllProducts = async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM products');
@@ -11,7 +11,7 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
-// GET product by name
+// ✅ GET product by name
 exports.getProductByName = async (req, res) => {
   try {
     const { name } = req.params;
@@ -26,7 +26,7 @@ exports.getProductByName = async (req, res) => {
   }
 };
 
-// GET products by category
+// ✅ GET products by category
 exports.getProductsByCategory = async (req, res) => {
   try {
     const { category } = req.params;
@@ -34,6 +34,28 @@ exports.getProductsByCategory = async (req, res) => {
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching products by category:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+// ✅ GET all categories with image and bgColor
+exports.getAllCategories = async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT category, MIN(image) AS image
+      FROM products
+      GROUP BY category
+    `);
+
+    const categories = result.rows.map(row => ({
+      title: row.category,
+      image: row.image || 'default.png',
+      bgColor: '#E3F2FD' // you can change color based on category if needed
+    }));
+
+    res.json(categories);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
     res.status(500).json({ error: 'Server error' });
   }
 };
