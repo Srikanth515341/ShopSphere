@@ -50,12 +50,49 @@ exports.getAllCategories = async (req, res) => {
     const categories = result.rows.map(row => ({
       title: row.category,
       image: row.image || 'default.png',
-      bgColor: '#E3F2FD' // you can change color based on category if needed
+      bgColor: '#E3F2FD'
     }));
 
     res.json(categories);
   } catch (error) {
     console.error('Error fetching categories:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+// ✅ GET product by ID
+exports.getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error fetching product by ID:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+// ✅ UPDATE product by ID
+exports.updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, price, image, category, details } = req.body;
+
+    const result = await pool.query(
+      'UPDATE products SET name = $1, price = $2, image = $3, category = $4, details = $5 WHERE id = $6 RETURNING *',
+      [name, price, image, category, details, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Product not found or not updated' });
+    }
+
+    res.json({ message: 'Product updated successfully', product: result.rows[0] });
+  } catch (error) {
+    console.error('Error updating product:', error);
     res.status(500).json({ error: 'Server error' });
   }
 };

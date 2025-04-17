@@ -4,7 +4,9 @@ const {
   getAllProducts,
   getProductByName,
   getProductsByCategory,
-  getAllCategories, // ✅ Importing category list controller
+  getAllCategories,
+  getProductById,
+  updateProduct
 } = require('../controllers/productController');
 
 // ✅ Get all products
@@ -18,5 +20,11 @@ router.get('/category/:category', getProductsByCategory);
 
 // ✅ Get all unique categories (used in Categories page)
 router.get('/categories', getAllCategories);
+
+// ✅ Get a product by ID (for Edit page)
+router.get('/id/:id', getProductById);
+
+// ✅ Update a product by ID
+router.put('/:id', updateProduct);
 
 module.exports = router;
