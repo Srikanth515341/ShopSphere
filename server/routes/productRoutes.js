@@ -6,7 +6,8 @@ const {
   getProductsByCategory,
   getAllCategories,
   getProductById,
-  updateProduct
+  updateProduct,
+  deleteProduct // ✅ Added delete controller
 } = require('../controllers/productController');
 
 // ✅ Get all products
@@ -26,5 +27,8 @@ router.get('/id/:id', getProductById);
 
 // ✅ Update a product by ID
 router.put('/:id', updateProduct);
+
+// ✅ Delete a product by ID
+router.delete('/:id', deleteProduct);
 
 module.exports = router;

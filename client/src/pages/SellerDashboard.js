@@ -1,24 +1,57 @@
-// client/src/pages/SellerDashboard.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../styles/SellerDashboard.module.css';
-import AddProductForm from '../components/AddProductForm'; // ✅ Import form
+import AddProductForm from '../components/AddProductForm';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const SellerDashboard = () => {
   const [showForm, setShowForm] = useState(false);
-  const [products, setProducts] = useState([
-    { name: 'Product 1', price: 25 },
-    { name: 'Product 2', price: 30 },
-    { name: 'Product 3', price: 20 }
-  ]);
+  const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
 
+  // ✅ Fetch products on load
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/products');
+        setProducts(res.data);
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        alert('Failed to load products.');
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // ✅ Toggle Add Product form
   const handleToggleForm = () => {
     setShowForm(!showForm);
   };
 
-  // ✅ Add this function
+  // ✅ Update product list after new product added
   const handleAddProduct = (newProduct) => {
     setProducts([...products, newProduct]);
-    setShowForm(false); // hide form after adding
+    setShowForm(false);
+  };
+
+  // ✅ Handle delete
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      try {
+        await axios.delete(`http://localhost:5000/api/products/${id}`);
+        setProducts(products.filter((p) => p.id !== id));
+        alert('Product deleted successfully!');
+      } catch (err) {
+        console.error('Error deleting product:', err);
+        alert('Failed to delete product.');
+      }
+    }
+  };
+
+  // ✅ Navigate to Edit page
+  const handleEdit = (id) => {
+    navigate(`/edit/${id}`);
   };
 
   return (
@@ -45,9 +78,15 @@ const SellerDashboard = () => {
       <div className={styles.productList}>
         <h3>Your Products</h3>
         <ul>
-          {products.map((product, index) => (
-            <li key={index}>
+          {products.map((product) => (
+            <li key={product.id} className={styles.productItem}>
               {product.name} - ${product.price}
+              <button onClick={() => handleEdit(product.id)} className={styles.editBtn}>
+                ✏️
+              </button>
+              <button onClick={() => handleDelete(product.id)} className={styles.deleteBtn}>
+                🗑️
+              </button>
             </li>
           ))}
         </ul>
