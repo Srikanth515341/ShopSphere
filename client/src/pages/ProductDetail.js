@@ -4,11 +4,13 @@ import styles from '../styles/ProductDetail.module.css';
 import { fetchProductByName } from '../services/api';
 import { useCart } from '../context/CartContext';
 import { addToCartAPI } from '../services/cartService';
+import DeliveryForm from '../pages/DeliveryForm';
 
 const ProductDetail = () => {
   const { productName } = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [showForm, setShowForm] = useState(false);
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -24,18 +26,10 @@ const ProductDetail = () => {
 
   const handleAddToCart = async () => {
     const user = JSON.parse(localStorage.getItem('user'));
-    if (!user?.id) return alert('Please login to add items to cart');
-    if (!product?.id) return alert('Product ID is missing.');
-
+    if (!user?.id || !product?.id) return alert('Please login and try again.');
     try {
-      addToCart({ ...product, quantity }); // frontend update
-
-      await addToCartAPI({
-        userId: user.id,
-        productId: product.id,
-        quantity,
-      }); // backend update
-
+      addToCart({ ...product, quantity });
+      await addToCartAPI({ userId: user.id, productId: product.id, quantity });
       alert(`${product.name} added to cart`);
     } catch (error) {
       console.error('❌ Failed to add to cart:', error);
@@ -43,12 +37,22 @@ const ProductDetail = () => {
     }
   };
 
-  if (!product) {
-    return <div className={styles.error}>Product not found.</div>;
-  }
+  const handleBuyNow = () => {
+    setShowForm(true);
+  };
+
+  if (!product) return <div className={styles.error}>Product not found.</div>;
 
   return (
     <div className={styles.container}>
+      {showForm && (
+        <DeliveryForm
+          product={product}
+          quantity={quantity}
+          onClose={() => setShowForm(false)}
+        />
+      )}
+
       <div className={styles.imageSection}>
         <img src={require(`../assets/${product.image}`)} alt={product.name} />
       </div>
@@ -77,7 +81,7 @@ const ProductDetail = () => {
 
         <div className={styles.btnRow}>
           <button className={styles.cart} onClick={handleAddToCart}>Add to Cart</button>
-          <button className={styles.buy}>Buy now</button>
+          <button className={styles.buy} onClick={handleBuyNow}>Buy now</button>
         </div>
       </div>
     </div>

@@ -10,7 +10,8 @@ import Checkout from './pages/Checkout';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import SellerDashboard from './pages/SellerDashboard';
-import OrderHistory from './pages/OrderHistory'; // ✅ New import
+import OrderHistory from './pages/OrderHistory';
+import DeliveryForm from './pages/DeliveryForm'; // ✅ Correct path
 
 import { CartProvider } from './context/CartContext';
 import { UserProvider, useUser } from './context/UserContext';
@@ -53,6 +54,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <OrderHistory />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/delivery"
+              element={
+                <ProtectedRoute>
+                  <DeliveryForm />
                 </ProtectedRoute>
               }
             />
