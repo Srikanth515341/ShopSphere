@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from '../styles/Auth.module.css';
 import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../services/authService';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -14,23 +15,18 @@ const Register = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const { name, email, password } = form;
 
     if (name && email && password) {
-      // ✅ Use ID that exists in PostgreSQL (must match row in `users` table)
-      const newUser = {
-        id: 1, // 🟢 Replace this with real ID from your DB if needed
-        name,
-        email,
-        password
-      };
-
-      localStorage.setItem('registeredUser', JSON.stringify(newUser));
-      localStorage.setItem('user', JSON.stringify(newUser)); // ✅ Also set login session
-      alert('✅ Registration successful!');
-      navigate('/login');
+      const response = await registerUser({ name, email, password });
+      if (response && response.id) {
+        alert('✅ Registration successful!');
+        navigate('/login');
+      } else {
+        alert('❌ Registration failed. Try again.');
+      }
     } else {
       alert('❌ Please fill in all fields');
     }

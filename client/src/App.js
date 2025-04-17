@@ -9,19 +9,18 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import SellerDashboard from './pages/SellerDashboard'; // ✅ Import
+import SellerDashboard from './pages/SellerDashboard';
 import { CartProvider } from './context/CartContext';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { UserProvider, useUser } from './context/UserContext'; // ✅ Using UserContext
 
-// ✅ Protected route logic
 const ProtectedRoute = ({ children }) => {
-  const { user } = useAuth();
+  const { user } = useUser();
   return user ? children : <Navigate to="/login" replace />;
 };
 
 function App() {
   return (
-    <AuthProvider>
+    <UserProvider>
       <CartProvider>
         <Router>
           <Navbar />
@@ -52,7 +51,7 @@ function App() {
           </Routes>
         </Router>
       </CartProvider>
-    </AuthProvider>
+    </UserProvider>
   );
 }
 

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import styles from '../styles/Auth.module.css';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useUser } from '../context/UserContext'; // ✅ Correct import
+import { loginUser } from '../services/authService';
 
 const Login = () => {
-  const { login } = useAuth();
+  const { loginUser: setUser } = useUser(); // ✅ Rename to avoid conflict
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
 
@@ -12,11 +13,12 @@ const Login = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = login(form);
-    if (success && success.id) {
-      localStorage.setItem('user', JSON.stringify(success)); // ✅ Save user with ID
+    const response = await loginUser(form);
+    if (response && response.id) {
+      setUser(response); // ✅ Set user in context
+      localStorage.setItem('user', JSON.stringify(response)); // ✅ Save to localStorage
       alert('✅ Login successful!');
       navigate('/');
     } else {

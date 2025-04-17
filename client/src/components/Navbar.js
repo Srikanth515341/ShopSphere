@@ -3,14 +3,13 @@ import styles from '../styles/Navbar.module.css';
 import { FaShoppingCart } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
+import { useUser } from '../context/UserContext'; // ✅ Correct import
 
 const Navbar = () => {
   const { cartItems } = useCart();
-  const { user, logout } = useAuth();
+  const { user, logoutUser } = useUser(); // ✅ Correct hook and function
   const navigate = useNavigate();
 
-  // ✅ Safe fallback if cartItems is not an array
   const totalItems = Array.isArray(cartItems)
     ? cartItems.reduce((sum, item) => sum + item.quantity, 0)
     : 0;
@@ -18,7 +17,7 @@ const Navbar = () => {
   const handleLogout = () => {
     const confirmLogout = window.confirm('Are you sure you want to logout?');
     if (confirmLogout) {
-      logout();
+      logoutUser(); // ✅ Correct function
       navigate('/');
     }
   };
