@@ -5,13 +5,11 @@ exports.addProduct = async (req, res) => {
   try {
     const { name, price, image, category, details } = req.body;
 
-    // Check if product with same name exists
     const check = await pool.query('SELECT * FROM products WHERE LOWER(name) = LOWER($1)', [name]);
     if (check.rows.length > 0) {
       return res.status(400).json({ error: 'Product with the same name already exists' });
     }
 
-    // ✅ Convert details string to array if needed
     const detailsArray = Array.isArray(details) ? details : details.split(',').map(d => d.trim());
 
     const result = await pool.query(

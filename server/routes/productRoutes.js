@@ -8,7 +8,7 @@ const {
   getProductById,
   updateProduct,
   deleteProduct,
-  addProduct // ✅ NEW
+  addProduct
 } = require('../controllers/productController');
 
 // ✅ Get all products

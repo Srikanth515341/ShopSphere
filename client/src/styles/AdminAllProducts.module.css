@@ -1,0 +1,64 @@
+.container {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: auto;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fdfdfd;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .table th,
+  .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .table th {
+    background-color: #f2f2f2;
+    color: #333;
+  }
+  
+  .table img {
+    height: 50px;
+    border-radius: 4px;
+  }
+  
+  .editBtn,
+  .deleteBtn {
+    padding: 6px 10px;
+    margin-right: 6px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .editBtn {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .deleteBtn {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  .editBtn:hover {
+    background-color: #2980b9;
+  }
+  
+  .deleteBtn:hover {
+    background-color: #c0392b;
+  }
+  

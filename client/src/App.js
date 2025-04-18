@@ -17,7 +17,8 @@ import AdminOrders from './pages/AdminOrders';
 import AdminCategories from './pages/AdminCategories';
 import AdminProducts from './pages/AdminProducts';
 import AddProductPage from './pages/AddProductPage';
-import AdminUsers from './pages/AdminUsers'; // ✅ NEW
+import AdminUsers from './pages/AdminUsers';
+import AdminAllProducts from './pages/AdminAllProducts'; // ✅ NEW
 
 import { CartProvider } from './context/CartContext';
 import { UserProvider, useUser } from './context/UserContext';
@@ -46,7 +47,8 @@ function App() {
             <Route path="/admin/categories" element={<ProtectedRoute><AdminCategories /></ProtectedRoute>} />
             <Route path="/admin/products" element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
             <Route path="/admin/add-product" element={<ProtectedRoute><AddProductPage /></ProtectedRoute>} />
-            <Route path="/admin/users" element={<ProtectedRoute><AdminUsers /></ProtectedRoute>} /> {/* ✅ NEW */}
+            <Route path="/admin/users" element={<ProtectedRoute><AdminUsers /></ProtectedRoute>} />
+            <Route path="/admin/all-products" element={<ProtectedRoute><AdminAllProducts /></ProtectedRoute>} /> {/* ✅ NEW */}
             <Route path="/delivery" element={<ProtectedRoute><DeliveryForm /></ProtectedRoute>} />
             <Route path="/edit/:productId" element={<ProtectedRoute><EditProduct /></ProtectedRoute>} />
             <Route path="/login" element={<Login />} />
