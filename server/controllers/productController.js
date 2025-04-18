@@ -75,6 +75,23 @@ exports.getProductById = async (req, res) => {
   }
 };
 
+// ✅ ADD a new product
+exports.addProduct = async (req, res) => {
+  try {
+    const { name, category, price, image, details } = req.body;
+
+    const result = await pool.query(
+      'INSERT INTO products (name, category, price, image, details) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [name, category, price, image, details]
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error('Error adding product:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 // ✅ UPDATE product by ID
 exports.updateProduct = async (req, res) => {
   try {

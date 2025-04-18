@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from '../styles/AddProductForm.module.css';
+import axios from 'axios';
 
 const AddProductForm = ({ onAddProduct }) => {
   const [form, setForm] = useState({
@@ -14,20 +15,30 @@ const AddProductForm = ({ onAddProduct }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.name && form.category && form.price && form.image && form.details) {
-      const newProduct = {
-        ...form,
-        discountPrice: parseFloat(form.price),
-        originalPrice: parseFloat(form.price) + 10,
-        details: form.details.split(',').map((d) => d.trim())
-      };
-      onAddProduct(newProduct);
+
+    if (!form.name || !form.category || !form.price || !form.image || !form.details) {
+      alert('❌ Please fill in all fields.');
+      return;
+    }
+
+    const newProduct = {
+      name: form.name,
+      category: form.category,
+      price: parseFloat(form.price),
+      image: form.image,
+      details: form.details
+    };
+
+    try {
+      await axios.post('http://localhost:5000/api/products', newProduct);
       setForm({ name: '', category: '', price: '', image: '', details: '' });
       alert('✅ Product added successfully!');
-    } else {
-      alert('❌ Please fill in all fields.');
+      if (onAddProduct) onAddProduct(); // optional callback
+    } catch (error) {
+      console.error('Error adding product:', error);
+      alert('❌ Failed to add product');
     }
   };
 
@@ -60,7 +71,7 @@ const AddProductForm = ({ onAddProduct }) => {
       <input
         type="text"
         name="image"
-        placeholder="Image filename (e.g., potato.png)"
+        placeholder="Image filename (e.g., tomato.png)"
         value={form.image}
         onChange={handleChange}
       />

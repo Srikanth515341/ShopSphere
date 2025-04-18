@@ -19,6 +19,8 @@ import AdminProducts from './pages/AdminProducts'; // ✅ NEW
 
 import { CartProvider } from './context/CartContext';
 import { UserProvider, useUser } from './context/UserContext';
+import AddProductPage from './pages/AddProductPage'; // ✅ NEW
+
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useUser();
@@ -93,6 +95,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+  path="/admin/add-product"
+  element={
+    <ProtectedRoute>
+      <AddProductPage />
+    </ProtectedRoute>
+  }
+/>
+
             <Route
               path="/edit/:productId"
               element={
