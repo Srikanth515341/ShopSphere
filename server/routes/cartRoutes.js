@@ -3,20 +3,20 @@ const router = express.Router();
 const {
   addToCart,
   getCartItems,
-  removeFromCart,
-  clearCart,
+  deleteCartItem,
+  clearCart
 } = require('../controllers/cartController');
 
-// ✅ Add item to cart
+// ✅ Add to cart
 router.post('/', addToCart);
 
-// ✅ Get all items in cart for a specific user
+// ✅ Get user's cart items
 router.get('/:userId', getCartItems);
 
-// ✅ Remove specific cart item by cart item ID
-router.delete('/:itemId', removeFromCart);
-
-// ✅ Clear entire cart for a user
+// ✅ Clear all items in a user's cart
 router.delete('/clear/:userId', clearCart);
+
+// ✅ Delete a single cart item by ID
+router.delete('/:itemId', deleteCartItem);
 
 module.exports = router;
