@@ -19,6 +19,19 @@ const AdminUsers = () => {
     }
   };
 
+  const handleRoleChange = async (userId, newRole) => {
+    try {
+      await axios.put(`http://localhost:5000/api/users/role/${userId}`, { role: newRole });
+      const updatedUsers = users.map((user) =>
+        user.id === userId ? { ...user, role: newRole } : user
+      );
+      setUsers(updatedUsers);
+    } catch (err) {
+      console.error('Error updating role:', err);
+      alert('Failed to update role');
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -46,7 +59,16 @@ const AdminUsers = () => {
               <tr key={user.id}>
                 <td>{user.id}</td>
                 <td>{user.email}</td>
-                <td>{user.role}</td>
+                <td>
+                  <select
+                    value={user.role}
+                    onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                  >
+                    <option value="customer">Customer</option>
+                    <option value="seller">Seller</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </td>
                 <td>{new Date(user.created_at).toLocaleDateString()}</td>
               </tr>
             ))}
