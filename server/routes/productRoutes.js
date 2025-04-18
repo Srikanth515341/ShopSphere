@@ -6,13 +6,16 @@ const {
   getProductsByCategory,
   getAllCategories,
   getProductById,
-  addProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  addProduct // ✅ NEW
 } = require('../controllers/productController');
 
 // ✅ Get all products
 router.get('/', getAllProducts);
+
+// ✅ Create a new product
+router.post('/', addProduct);
 
 // ✅ Get a product by name
 router.get('/name/:name', getProductByName);
@@ -20,14 +23,11 @@ router.get('/name/:name', getProductByName);
 // ✅ Get products by category
 router.get('/category/:category', getProductsByCategory);
 
-// ✅ Get all unique categories
+// ✅ Get all unique categories (used in Categories page)
 router.get('/categories', getAllCategories);
 
-// ✅ Get a product by ID
+// ✅ Get a product by ID (for Edit page)
 router.get('/id/:id', getProductById);
-
-// ✅ Add a new product
-router.post('/', addProduct);
 
 // ✅ Update a product by ID
 router.put('/:id', updateProduct);
