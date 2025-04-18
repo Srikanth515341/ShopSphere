@@ -4,11 +4,8 @@ import axios from 'axios';
 
 const AdminCategories = () => {
   const [categories, setCategories] = useState([]);
-  const [newCategory, setNewCategory] = useState({
-    title: '',
-    image: '',
-    bgColor: ''
-  });
+  const [newCategory, setNewCategory] = useState({ title: '', image: '', bgColor: '' });
+  const [editIndex, setEditIndex] = useState(null);
 
   const fetchCategories = async () => {
     try {
@@ -33,9 +30,29 @@ const AdminCategories = () => {
       return;
     }
 
-    setCategories([...categories, newCategory]);
+    if (editIndex !== null) {
+      const updated = [...categories];
+      updated[editIndex] = newCategory;
+      setCategories(updated);
+      setEditIndex(null);
+      alert('✅ Category updated locally');
+    } else {
+      setCategories([...categories, newCategory]);
+      alert('✅ Category added locally');
+    }
+
     setNewCategory({ title: '', image: '', bgColor: '' });
-    alert('✅ Category added locally (you can link it to backend later)');
+  };
+
+  const handleEdit = (index) => {
+    setEditIndex(index);
+    setNewCategory(categories[index]);
+  };
+
+  const handleDelete = (index) => {
+    const updated = categories.filter((_, i) => i !== index);
+    setCategories(updated);
+    alert('❌ Category deleted locally');
   };
 
   return (
@@ -64,7 +81,9 @@ const AdminCategories = () => {
           value={newCategory.bgColor}
           onChange={handleChange}
         />
-        <button onClick={handleAddCategory}>+ Add Category</button>
+        <button onClick={handleAddCategory}>
+          {editIndex !== null ? 'Update Category' : '+ Add Category'}
+        </button>
       </div>
 
       <div className={styles.grid}>
@@ -72,6 +91,10 @@ const AdminCategories = () => {
           <div key={index} className={styles.card} style={{ backgroundColor: cat.bgColor }}>
             <img src={require(`../assets/${cat.image}`)} alt={cat.title} />
             <h4>{cat.title}</h4>
+            <div className={styles.actions}>
+              <button onClick={() => handleEdit(index)} className={styles.edit}>Edit</button>
+              <button onClick={() => handleDelete(index)} className={styles.delete}>Delete</button>
+            </div>
           </div>
         ))}
       </div>
