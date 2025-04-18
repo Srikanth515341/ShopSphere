@@ -14,7 +14,8 @@ import OrderHistory from './pages/OrderHistory';
 import DeliveryForm from './pages/DeliveryForm';
 import EditProduct from './pages/EditProduct';
 import AdminOrders from './pages/AdminOrders';
-import AdminCategories from './pages/AdminCategories'; // ✅ NEW
+import AdminCategories from './pages/AdminCategories';
+import AdminProducts from './pages/AdminProducts'; // ✅ NEW
 
 import { CartProvider } from './context/CartContext';
 import { UserProvider, useUser } from './context/UserContext';
@@ -73,6 +74,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AdminCategories />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/products"
+              element={
+                <ProtectedRoute>
+                  <AdminProducts />
                 </ProtectedRoute>
               }
             />
