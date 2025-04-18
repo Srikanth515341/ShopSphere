@@ -13,7 +13,8 @@ import SellerDashboard from './pages/SellerDashboard';
 import OrderHistory from './pages/OrderHistory';
 import DeliveryForm from './pages/DeliveryForm';
 import EditProduct from './pages/EditProduct';
-import AdminOrders from './pages/AdminOrders'; // ✅ NEW
+import AdminOrders from './pages/AdminOrders';
+import AdminCategories from './pages/AdminCategories'; // ✅ NEW
 
 import { CartProvider } from './context/CartContext';
 import { UserProvider, useUser } from './context/UserContext';
@@ -64,6 +65,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AdminOrders />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/categories"
+              element={
+                <ProtectedRoute>
+                  <AdminCategories />
                 </ProtectedRoute>
               }
             />
