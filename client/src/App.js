@@ -15,12 +15,12 @@ import DeliveryForm from './pages/DeliveryForm';
 import EditProduct from './pages/EditProduct';
 import AdminOrders from './pages/AdminOrders';
 import AdminCategories from './pages/AdminCategories';
-import AdminProducts from './pages/AdminProducts'; // ✅ NEW
+import AdminProducts from './pages/AdminProducts';
+import AddProductPage from './pages/AddProductPage';
+import AdminUsers from './pages/AdminUsers'; // ✅ NEW
 
 import { CartProvider } from './context/CartContext';
 import { UserProvider, useUser } from './context/UserContext';
-import AddProductPage from './pages/AddProductPage'; // ✅ NEW
-
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useUser();
@@ -39,79 +39,16 @@ function App() {
             <Route path="/products/:category" element={<ProductList />} />
             <Route path="/products/:category/:productName" element={<ProductDetail />} />
             <Route path="/cart" element={<Cart />} />
-            <Route
-              path="/checkout"
-              element={
-                <ProtectedRoute>
-                  <Checkout />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/seller"
-              element={
-                <ProtectedRoute>
-                  <SellerDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/orders"
-              element={
-                <ProtectedRoute>
-                  <OrderHistory />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/orders"
-              element={
-                <ProtectedRoute>
-                  <AdminOrders />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/categories"
-              element={
-                <ProtectedRoute>
-                  <AdminCategories />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/products"
-              element={
-                <ProtectedRoute>
-                  <AdminProducts />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/delivery"
-              element={
-                <ProtectedRoute>
-                  <DeliveryForm />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-  path="/admin/add-product"
-  element={
-    <ProtectedRoute>
-      <AddProductPage />
-    </ProtectedRoute>
-  }
-/>
-
-            <Route
-              path="/edit/:productId"
-              element={
-                <ProtectedRoute>
-                  <EditProduct />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+            <Route path="/seller" element={<ProtectedRoute><SellerDashboard /></ProtectedRoute>} />
+            <Route path="/orders" element={<ProtectedRoute><OrderHistory /></ProtectedRoute>} />
+            <Route path="/admin/orders" element={<ProtectedRoute><AdminOrders /></ProtectedRoute>} />
+            <Route path="/admin/categories" element={<ProtectedRoute><AdminCategories /></ProtectedRoute>} />
+            <Route path="/admin/products" element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
+            <Route path="/admin/add-product" element={<ProtectedRoute><AddProductPage /></ProtectedRoute>} />
+            <Route path="/admin/users" element={<ProtectedRoute><AdminUsers /></ProtectedRoute>} /> {/* ✅ NEW */}
+            <Route path="/delivery" element={<ProtectedRoute><DeliveryForm /></ProtectedRoute>} />
+            <Route path="/edit/:productId" element={<ProtectedRoute><EditProduct /></ProtectedRoute>} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Routes>
