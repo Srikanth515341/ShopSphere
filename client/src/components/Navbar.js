@@ -32,8 +32,21 @@ const Navbar = () => {
 
       <ul className={styles.navLinks}>
         <li><Link to="/categories">All Products</Link></li>
-        <li><Link to="/seller">Seller Dashboard</Link></li>
-        {user && <li><Link to="/orders">Order History</Link></li>} {/* ✅ New link */}
+        
+        {user?.role === 'seller' && (
+          <li><Link to="/seller">Seller Dashboard</Link></li>
+        )}
+
+        {user?.role === 'admin' && (
+          <>
+            <li><Link to="/admin/products">Admin Products</Link></li>
+            <li><Link to="/admin/categories">Admin Categories</Link></li>
+            <li><Link to="/admin/users">Manage Users</Link></li>
+            <li><Link to="/admin/orders">Admin Orders</Link></li>
+          </>
+        )}
+
+        {user && <li><Link to="/orders">Order History</Link></li>}
       </ul>
 
       <div className={styles.actions}>
