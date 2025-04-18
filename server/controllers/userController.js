@@ -32,3 +32,21 @@ exports.updateUserRole = async (req, res) => {
     res.status(500).json({ error: 'Failed to update user role' });
   }
 };
+
+// ✅ DELETE user by ID
+exports.deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [id]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ error: 'Failed to delete user' });
+  }
+};

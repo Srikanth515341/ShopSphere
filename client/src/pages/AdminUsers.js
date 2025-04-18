@@ -32,6 +32,20 @@ const AdminUsers = () => {
     }
   };
 
+  const handleDeleteUser = async (userId) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this user?');
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(`http://localhost:5000/api/users/${userId}`);
+      const filteredUsers = users.filter((user) => user.id !== userId);
+      setUsers(filteredUsers);
+    } catch (err) {
+      console.error('Error deleting user:', err);
+      alert('Failed to delete user');
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -52,6 +66,7 @@ const AdminUsers = () => {
               <th>Email</th>
               <th>Role</th>
               <th>Created At</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -70,6 +85,11 @@ const AdminUsers = () => {
                   </select>
                 </td>
                 <td>{new Date(user.created_at).toLocaleDateString()}</td>
+                <td>
+                  <button className={styles.deleteBtn} onClick={() => handleDeleteUser(user.id)}>
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
