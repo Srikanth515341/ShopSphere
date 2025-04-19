@@ -24,18 +24,18 @@ const AddProductForm = ({ onAddProduct }) => {
     }
 
     const newProduct = {
-      name: form.name,
-      category: form.category,
+      name: form.name.trim(),
+      category: form.category.trim(),
       price: parseFloat(form.price),
-      image: form.image,
+      image: form.image.trim(),
       details: form.details
     };
 
     try {
-      await axios.post('http://localhost:5000/api/products', newProduct);
+      const res = await axios.post('http://localhost:5000/api/products', newProduct);
       setForm({ name: '', category: '', price: '', image: '', details: '' });
       alert('✅ Product added successfully!');
-      if (onAddProduct) onAddProduct(); // optional callback
+      if (onAddProduct) onAddProduct(res.data.product); // pass new product
     } catch (error) {
       console.error('Error adding product:', error);
       alert('❌ Failed to add product');
@@ -62,7 +62,7 @@ const AddProductForm = ({ onAddProduct }) => {
         onChange={handleChange}
       />
       <input
-        type="text"
+        type="number"
         name="price"
         placeholder="Price"
         value={form.price}

@@ -80,13 +80,13 @@ const SellerDashboard = () => {
         <ul>
           {products.map((product) => (
             <li key={product.id} className={styles.productItem}>
-              {product.name} - ${product.price}
-              <button onClick={() => handleEdit(product.id)} className={styles.editBtn}>
-                ✏️
-              </button>
-              <button onClick={() => handleDelete(product.id)} className={styles.deleteBtn}>
-                🗑️
-              </button>
+              <div>
+                <strong>{product.name}</strong> - ₹{product.price}
+              </div>
+              <div>
+                <button onClick={() => handleEdit(product.id)} className={styles.editBtn}>✏️</button>
+                <button onClick={() => handleDelete(product.id)} className={styles.deleteBtn}>🗑️</button>
+              </div>
             </li>
           ))}
         </ul>
