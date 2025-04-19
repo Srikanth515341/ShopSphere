@@ -35,15 +35,21 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
-// ✅ Get product by name
+// ✅ Get product by name (URL-safe version)
 exports.getProductByName = async (req, res) => {
   try {
     const { name } = req.params;
-    const result = await pool.query('SELECT * FROM products WHERE LOWER(name) = LOWER($1)', [name]);
-    if (result.rows.length === 0) {
+
+    const result = await pool.query('SELECT * FROM products');
+    const matchedProduct = result.rows.find(product =>
+      product.name.replace(/\s+/g, '').toLowerCase() === name.toLowerCase()
+    );
+
+    if (!matchedProduct) {
       return res.status(404).json({ error: 'Product not found' });
     }
-    res.json(result.rows[0]);
+
+    res.json(matchedProduct);
   } catch (error) {
     console.error('Error fetching product by name:', error);
     res.status(500).json({ error: 'Server error' });

@@ -15,8 +15,13 @@ const ProductDetail = () => {
 
   useEffect(() => {
     const loadProduct = async () => {
-      const data = await fetchProductByName(productName);
-      setProduct(data);
+      try {
+        const encodedName = encodeURIComponent(productName);
+        const data = await fetchProductByName(encodedName);
+        setProduct(data);
+      } catch (err) {
+        console.error('❌ Error loading product:', err);
+      }
     };
     loadProduct();
   }, [productName]);
@@ -41,7 +46,17 @@ const ProductDetail = () => {
     setShowForm(true);
   };
 
+  const getImage = (imageName) => {
+    try {
+      return require(`../assets/${imageName}`);
+    } catch {
+      return null;
+    }
+  };
+
   if (!product) return <div className={styles.error}>Product not found.</div>;
+
+  const productImage = getImage(product.image);
 
   return (
     <div className={styles.container}>
@@ -54,7 +69,11 @@ const ProductDetail = () => {
       )}
 
       <div className={styles.imageSection}>
-        <img src={require(`../assets/${product.image}`)} alt={product.name} />
+        {productImage ? (
+          <img src={productImage} alt={product.name} />
+        ) : (
+          <p className={styles.error}>Image not found</p>
+        )}
       </div>
 
       <div className={styles.detailsSection}>

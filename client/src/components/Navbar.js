@@ -32,9 +32,12 @@ const Navbar = () => {
 
       <ul className={styles.navLinks}>
         <li><Link to="/categories">All Products</Link></li>
-        
+
         {user?.role === 'seller' && (
-          <li><Link to="/seller">Seller Dashboard</Link></li>
+          <>
+            <li><Link to="/seller">Seller Dashboard</Link></li>
+            <li><Link to="/seller/orders">Seller Orders</Link></li> {/* ✅ NEW */}
+          </>
         )}
 
         {user?.role === 'admin' && (
