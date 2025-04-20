@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import {
   getCartItemsAPI,
   addToCartAPI,
@@ -19,21 +19,21 @@ export const CartProvider = ({ children }) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (userId) {
-      loadCart();
-    }
-  }, [userId]);
-
-  const loadCart = async () => {
+  const loadCart = useCallback(async () => {
     try {
-      const items = await getCartItemsAPI(userId);
-      setCartItems(Array.isArray(items) ? items : []);
+      if (userId) {
+        const items = await getCartItemsAPI(userId);
+        setCartItems(Array.isArray(items) ? items : []);
+      }
     } catch (error) {
       console.error('Cart fetch failed', error);
       setCartItems([]);
     }
-  };
+  }, [userId]);
+
+  useEffect(() => {
+    loadCart();
+  }, [loadCart]);
 
   const addToCart = async (product, quantity = 1) => {
     try {

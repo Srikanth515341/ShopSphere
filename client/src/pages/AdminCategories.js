@@ -4,15 +4,66 @@ import axios from 'axios';
 
 const AdminCategories = () => {
   const [categories, setCategories] = useState([]);
-  const [newCategory, setNewCategory] = useState({ title: '', image: '', bgColor: '' });
-  const [editIndex, setEditIndex] = useState(null);
+  const [title, setTitle] = useState('');
+  const [image, setImage] = useState('');
+  const [bgcolor, setBgcolor] = useState('');
+  const [editId, setEditId] = useState(null);
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/products/categories');
+      const res = await axios.get('http://localhost:5000/api/categories');
       setCategories(res.data);
-    } catch (err) {
-      console.error('Failed to fetch categories:', err);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!title || !image || !bgcolor) {
+      alert('All fields are required!');
+      return;
+    }
+
+    const categoryData = { title, image, bgcolor };
+
+    try {
+      if (editId) {
+        await axios.put(`http://localhost:5000/api/categories/${editId}`, categoryData);
+        alert('Category updated successfully');
+      } else {
+        await axios.post('http://localhost:5000/api/categories', categoryData);
+        alert('Category added successfully');
+      }
+      setTitle('');
+      setImage('');
+      setBgcolor('');
+      setEditId(null);
+      fetchCategories();
+    } catch (error) {
+      console.error('Error saving category:', error);
+      alert('❌ Failed to save category');
+    }
+  };
+
+  const handleEdit = (category) => {
+    setTitle(category.title);
+    setImage(category.image);
+    setBgcolor(category.bgcolor);
+    setEditId(category.id);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this category?')) {
+      try {
+        await axios.delete(`http://localhost:5000/api/categories/${id}`);
+        alert('Category deleted');
+        fetchCategories();
+      } catch (error) {
+        console.error('Error deleting category:', error);
+        alert('❌ Failed to delete category');
+      }
     }
   };
 
@@ -20,80 +71,49 @@ const AdminCategories = () => {
     fetchCategories();
   }, []);
 
-  const handleChange = (e) => {
-    setNewCategory({ ...newCategory, [e.target.name]: e.target.value });
-  };
-
-  const handleAddCategory = () => {
-    if (!newCategory.title || !newCategory.image || !newCategory.bgColor) {
-      alert('Please fill in all fields');
-      return;
-    }
-
-    if (editIndex !== null) {
-      const updated = [...categories];
-      updated[editIndex] = newCategory;
-      setCategories(updated);
-      setEditIndex(null);
-      alert('✅ Category updated locally');
-    } else {
-      setCategories([...categories, newCategory]);
-      alert('✅ Category added locally');
-    }
-
-    setNewCategory({ title: '', image: '', bgColor: '' });
-  };
-
-  const handleEdit = (index) => {
-    setEditIndex(index);
-    setNewCategory(categories[index]);
-  };
-
-  const handleDelete = (index) => {
-    const updated = categories.filter((_, i) => i !== index);
-    setCategories(updated);
-    alert('❌ Category deleted locally');
-  };
-
   return (
     <div className={styles.container}>
-      <h2>Admin - Manage Categories</h2>
-
-      <div className={styles.form}>
+      <h2 className={styles.heading}>Admin - Manage Categories</h2>
+      <form onSubmit={handleSubmit} className={styles.form}>
         <input
           type="text"
-          name="title"
           placeholder="Category Title"
-          value={newCategory.title}
-          onChange={handleChange}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
         <input
           type="text"
-          name="image"
           placeholder="Image Filename (e.g. fruits.png)"
-          value={newCategory.image}
-          onChange={handleChange}
+          value={image}
+          onChange={(e) => setImage(e.target.value)}
         />
         <input
           type="text"
-          name="bgColor"
           placeholder="Background Color (e.g. #E3F2FD)"
-          value={newCategory.bgColor}
-          onChange={handleChange}
+          value={bgcolor}
+          onChange={(e) => setBgcolor(e.target.value)}
         />
-        <button onClick={handleAddCategory}>
-          {editIndex !== null ? 'Update Category' : '+ Add Category'}
+        <button type="submit" className={styles.addBtn}>
+          {editId ? 'Update Category' : '+ Add Category'}
         </button>
-      </div>
+      </form>
 
-      <div className={styles.grid}>
-        {categories.map((cat, index) => (
-          <div key={index} className={styles.card} style={{ backgroundColor: cat.bgColor }}>
-            <img src={require(`../assets/${cat.image}`)} alt={cat.title} />
-            <h4>{cat.title}</h4>
+      <div className={styles.cardGrid}>
+        {categories.map((cat) => (
+          <div
+            key={cat.id}
+            className={styles.card}
+            style={{ backgroundColor: cat.bgcolor }}
+          >
+            <img
+              src={require(`../assets/${cat.image}`)}
+              alt={cat.title}
+              className={styles.image}
+            />
+            <h3 className={styles.title}>{cat.title.toUpperCase()}</h3>
             <div className={styles.actions}>
-              <button onClick={() => handleEdit(index)} className={styles.edit}>Edit</button>
-              <button onClick={() => handleDelete(index)} className={styles.delete}>Delete</button>
+              <button onClick={() => handleEdit(cat)}>Edit</button>
+              <button onClick={() => handleDelete(cat.id)}>Delete</button>
             </div>
           </div>
         ))}

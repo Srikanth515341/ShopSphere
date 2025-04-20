@@ -6,8 +6,9 @@ const productRoutes = require('./routes/productRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const authRoutes = require('./routes/authRoutes');
 const orderRoutes = require('./routes/orderRoutes');
-const userRoutes = require('./routes/userRoutes');      // ✅
-const sellerRoutes = require('./routes/sellerRoutes');  // ✅ NEW
+const userRoutes = require('./routes/userRoutes');
+const sellerRoutes = require('./routes/sellerRoutes');
+const categoryRoutes = require('./routes/categoryRoutes'); // ✅ Added category routes
 
 dotenv.config();
 
@@ -20,8 +21,9 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
-app.use('/api/users', userRoutes); 
-app.use('/api/seller', sellerRoutes); // ✅ Register seller routes
+app.use('/api/users', userRoutes);
+app.use('/api/seller', sellerRoutes);
+app.use('/api/categories', categoryRoutes); // ✅ Category API endpoint
 
 app.listen(5000, () => {
   console.log('✅ Server running on port 5000');

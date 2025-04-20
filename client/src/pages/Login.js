@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import styles from '../styles/Auth.module.css';
 import { useNavigate, Link } from 'react-router-dom';
-import { useUser } from '../context/UserContext'; // ✅ Correct import
+import { useUser } from '../context/UserContext';
 import { loginUser } from '../services/authService';
 
 const Login = () => {
-  const { loginUser: setUser } = useUser(); // ✅ Rename to avoid conflict
+  const { loginUser: setUser } = useUser();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
 
@@ -15,14 +15,19 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await loginUser(form);
-    if (response && response.id) {
-      setUser(response); // ✅ Set user in context
-      localStorage.setItem('user', JSON.stringify(response)); // ✅ Save to localStorage
-      alert('✅ Login successful!');
-      navigate('/');
-    } else {
-      alert('❌ Invalid email or password');
+    try {
+      const response = await loginUser(form);
+      if (response && response.id) {
+        localStorage.setItem('user', JSON.stringify(response)); // ✅ Save user
+        setUser(response); // ✅ Update context
+        alert('✅ Login successful!');
+        navigate('/');
+      } else {
+        alert(response.error || '❌ Invalid email or password');
+      }
+    } catch (error) {
+      alert('Something went wrong. Please try again.');
+      console.error('Login error:', error);
     }
   };
 

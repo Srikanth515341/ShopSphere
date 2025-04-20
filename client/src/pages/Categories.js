@@ -1,51 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import styles from '../styles/Categories.module.css';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import styles from "../styles/Categories.module.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Categories = () => {
-  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
-
-  const handleClick = (category) => {
-    const formattedTitle = category.replace(/\s|&/g, '').toLowerCase();
-    navigate(`/products/${formattedTitle}`);
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const res = await axios.get('http://localhost:5000/api/products/categories');
-      setCategories(res.data); // Expecting: [{ title, image, bgColor }]
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    }
-  };
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await axios.get("/api/categories");
+        setCategories(res.data);
+      } catch (err) {
+        console.error("Failed to fetch categories", err);
+      }
+    };
+
     fetchCategories();
   }, []);
 
+  const handleCategoryClick = (category) => {
+    navigate(`/products/${category.title}`);
+  };
+
+  const getImage = (filename) => {
+    try {
+      return require(`../assets/${filename}`);
+    } catch (error) {
+      return null;
+    }
+  };
+
   return (
     <div className={styles.container}>
-      <h2 className={styles.sectionTitle}>All Categories</h2>
+      <h2>All Categories</h2>
       <div className={styles.grid}>
-        {categories.map((item, index) => (
+        {categories.map((category) => (
           <div
-            key={index}
+            key={category.id}
             className={styles.card}
-            style={{ backgroundColor: item.bgColor }}
-            onClick={() => handleClick(item.title)}
+            style={{ backgroundColor: category.backgroundColor }}
+            onClick={() => handleCategoryClick(category)}
           >
             <img
-              src={
-                item.image
-                  ? require(`../assets/${item.image}`)
-                  : require(`../assets/default.png`) // fallback if image is missing
-              }
-              alt={item.title}
+              src={getImage(category.image)}
+              alt={category.title}
               className={styles.image}
             />
-            <p className={styles.label}>{item.title}</p>
+            <p>{category.title}</p>
           </div>
         ))}
       </div>

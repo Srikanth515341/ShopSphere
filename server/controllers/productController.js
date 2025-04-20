@@ -145,3 +145,23 @@ exports.deleteProduct = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+
+// ✅ Delete entire category (all products)
+exports.deleteCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const result = await pool.query(
+      'DELETE FROM products WHERE LOWER(category) = LOWER($1) RETURNING *',
+      [category]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'No products found under this category' });
+    }
+
+    res.json({ message: 'Category deleted successfully', deletedCount: result.rows.length });
+  } catch (error) {
+    console.error('Error deleting category:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};

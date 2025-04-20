@@ -3,11 +3,27 @@ const API_URL = "http://localhost:5000/api/cart";
 // ✅ Add product to cart
 export const addToCartAPI = async ({ userId, productId, quantity = 1 }) => {
   try {
+    // Ensure valid number inputs
+    if (!userId || !productId || isNaN(userId) || isNaN(productId)) {
+      console.error("Invalid userId or productId for addToCartAPI");
+      return null;
+    }
+
     const response = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, productId, quantity }),
+      body: JSON.stringify({
+        userId: Number(userId),
+        productId: Number(productId),
+        quantity: Number(quantity),
+      }),
     });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Add to cart failed:", errorText);
+      return null;
+    }
 
     return await response.json();
   } catch (error) {
@@ -19,7 +35,19 @@ export const addToCartAPI = async ({ userId, productId, quantity = 1 }) => {
 // ✅ Get cart items for user
 export const getCartItemsAPI = async (userId) => {
   try {
-    const response = await fetch(`${API_URL}/${userId}`);
+    if (!userId || isNaN(userId)) {
+      console.error("Invalid userId for getCartItemsAPI");
+      return [];
+    }
+
+    const response = await fetch(`${API_URL}/${Number(userId)}`);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Fetch cart failed:", errorText);
+      return [];
+    }
+
     return await response.json();
   } catch (error) {
     console.error("Error fetching cart items:", error);
@@ -30,9 +58,15 @@ export const getCartItemsAPI = async (userId) => {
 // ✅ Remove cart item
 export const removeCartItemAPI = async (itemId) => {
   try {
-    const response = await fetch(`${API_URL}/${itemId}`, {
+    if (!itemId || isNaN(itemId)) {
+      console.error("Invalid itemId for removeCartItemAPI");
+      return null;
+    }
+
+    const response = await fetch(`${API_URL}/${Number(itemId)}`, {
       method: "DELETE",
     });
+
     return await response.json();
   } catch (error) {
     console.error("Error removing item:", error);
@@ -43,9 +77,15 @@ export const removeCartItemAPI = async (itemId) => {
 // ✅ Clear cart
 export const clearCartAPI = async (userId) => {
   try {
-    const response = await fetch(`${API_URL}/clear/${userId}`, {
+    if (!userId || isNaN(userId)) {
+      console.error("Invalid userId for clearCartAPI");
+      return null;
+    }
+
+    const response = await fetch(`${API_URL}/clear/${Number(userId)}`, {
       method: "DELETE",
     });
+
     return await response.json();
   } catch (error) {
     console.error("Error clearing cart:", error);

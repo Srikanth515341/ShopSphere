@@ -21,3 +21,14 @@ export const fetchProductByName = async (name) => {
     return null;
   }
 };
+
+// ✅ Get all categories
+export const fetchAllCategories = async () => {
+  try {
+    const response = await fetch(`${API_URL}/categories`);
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return [];
+  }
+};

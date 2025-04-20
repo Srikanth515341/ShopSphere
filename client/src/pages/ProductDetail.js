@@ -34,7 +34,11 @@ const ProductDetail = () => {
     if (!user?.id || !product?.id) return alert('Please login and try again.');
     try {
       addToCart({ ...product, quantity });
-      await addToCartAPI({ userId: user.id, productId: product.id, quantity });
+      await addToCartAPI({
+        userId: Number(user.id),        // ✅ Ensure userId is a number
+        productId: Number(product.id),  // ✅ Ensure productId is a number
+        quantity
+      });
       alert(`${product.name} added to cart`);
     } catch (error) {
       console.error('❌ Failed to add to cart:', error);
