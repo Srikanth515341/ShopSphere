@@ -4,7 +4,7 @@ import styles from '../styles/ProductDetail.module.css';
 import { fetchProductByName } from '../services/api';
 import { useCart } from '../context/CartContext';
 import { addToCartAPI } from '../services/cartService';
-import DeliveryForm from '../pages/DeliveryForm';
+import DeliveryForm from './DeliveryForm';
 
 const ProductDetail = () => {
   const { productName } = useParams();
@@ -31,14 +31,24 @@ const ProductDetail = () => {
 
   const handleAddToCart = async () => {
     const user = JSON.parse(localStorage.getItem('user'));
-    if (!user?.id || !product?.id) return alert('Please login and try again.');
+    if (!user?.id || !product?.id) {
+      alert('Please login and try again.');
+      return;
+    }
+
+    const userId = Number(user.id);
+    const productId = Number(product.id);
+
+    console.log("🧪 Add to Cart Payload:", { userId, productId, quantity });
+
+    if (!userId || !productId || !quantity) {
+      alert('Missing required data to add to cart.');
+      return;
+    }
+
     try {
       addToCart({ ...product, quantity });
-      await addToCartAPI({
-        userId: Number(user.id),        // ✅ Ensure userId is a number
-        productId: Number(product.id),  // ✅ Ensure productId is a number
-        quantity
-      });
+      await addToCartAPI({ userId, productId, quantity });
       alert(`${product.name} added to cart`);
     } catch (error) {
       console.error('❌ Failed to add to cart:', error);
@@ -46,9 +56,7 @@ const ProductDetail = () => {
     }
   };
 
-  const handleBuyNow = () => {
-    setShowForm(true);
-  };
+  const handleBuyNow = () => setShowForm(true);
 
   const getImage = (imageName) => {
     try {

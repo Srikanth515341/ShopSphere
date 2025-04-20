@@ -1,17 +1,17 @@
 const db = require('../config/db');
 
-// ✅ Add item to cart
+// ✅ Add item to cart (no need for name and price if already in DB)
 exports.addToCart = async (req, res) => {
-  const { userId, productId, name, price, quantity } = req.body;
+  const { userId, productId, quantity } = req.body;
 
-  if (!userId || !productId || !name || !price || !quantity) {
+  if (!userId || !productId || !quantity) {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
   try {
     await db.query(
-      'INSERT INTO cart (user_id, product_id, name, price, quantity) VALUES ($1, $2, $3, $4, $5)',
-      [userId, productId, name, price, quantity]
+      'INSERT INTO cart (user_id, product_id, quantity) VALUES ($1, $2, $3)',
+      [userId, productId, quantity]
     );
     res.status(201).json({ message: 'Item added to cart' });
   } catch (error) {
@@ -26,7 +26,10 @@ exports.getCartItems = async (req, res) => {
 
   try {
     const result = await db.query(
-      'SELECT * FROM cart WHERE user_id = $1',
+      `SELECT c.id, c.product_id, c.quantity, p.name, p.price, p.image
+       FROM cart c
+       JOIN products p ON c.product_id = p.id
+       WHERE c.user_id = $1`,
       [userId]
     );
     res.json(result.rows);
